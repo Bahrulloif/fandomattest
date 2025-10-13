@@ -2,6 +2,7 @@ package com.tastamat.fandomat
 
 import android.Manifest
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -26,11 +27,18 @@ import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.system.exitProcess
 
 class MainActivity : ComponentActivity() {
-    private var loggingJob: Job? = null
-    private var logCounter = 0
+    private companion object {
+        const val PREFS_NAME = "logging_prefs"
+        const val KEY_LOGGING_ACTIVE = "logging_active"
+        const val KEY_LOGGING_INTERVAL = "logging_interval"
+        const val KEY_LOG_COUNTER = "log_counter"
+    }
+
+    private lateinit var prefs: android.content.SharedPreferences
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -46,7 +54,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
         checkPermissions()
+
+        // Восстанавливаем состояние логирования при запуске
+        val isLoggingActive = prefs.getBoolean(KEY_LOGGING_ACTIVE, false)
+        if (isLoggingActive) {
+            val interval = prefs.getLong(KEY_LOGGING_INTERVAL, 10)
+            startLogging(interval)
+        }
 
         setContent {
             FandomattestTheme {
@@ -83,9 +100,17 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun LoggingScreen() {
-        var intervalText by remember { mutableStateOf(TextFieldValue("10")) }
-        var isLogging by remember { mutableStateOf(false) }
-        var statusText by remember { mutableStateOf("Логирование остановлено") }
+        val isLoggingActive = prefs.getBoolean(KEY_LOGGING_ACTIVE, false)
+        val savedInterval = prefs.getLong(KEY_LOGGING_INTERVAL, 10)
+
+        var intervalText by remember { mutableStateOf(TextFieldValue(savedInterval.toString())) }
+        var isLogging by remember { mutableStateOf(isLoggingActive) }
+        var statusText by remember {
+            mutableStateOf(
+                if (isLoggingActive) "Логирование активно (интервал: ${savedInterval}с)"
+                else "Логирование остановлено"
+            )
+        }
 
         Column(
             modifier = Modifier
@@ -155,7 +180,7 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.padding(vertical = 8.dp)
             )
 
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
             // Кнопки управления
             Text(
@@ -224,19 +249,33 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun startLogging(intervalSeconds: Long) {
-        logCounter = 0
-        loggingJob = CoroutineScope(Dispatchers.IO).launch {
-            while (isActive) {
-                logCounter++
-                writeLog("Log entry #$logCounter: application running normally")
-                delay(intervalSeconds * 1000)
-            }
+        // Сохраняем состояние в SharedPreferences
+        prefs.edit().apply {
+            putBoolean(KEY_LOGGING_ACTIVE, true)
+            putLong(KEY_LOGGING_INTERVAL, intervalSeconds)
+            putInt(KEY_LOG_COUNTER, 0)
+            apply()
+        }
+
+        // Запускаем Foreground Service
+        val serviceIntent = Intent(this, LoggingService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent)
+        } else {
+            startService(serviceIntent)
         }
     }
 
     private fun stopLogging() {
-        loggingJob?.cancel()
-        loggingJob = null
+        // Сохраняем состояние остановки
+        prefs.edit().apply {
+            putBoolean(KEY_LOGGING_ACTIVE, false)
+            apply()
+        }
+
+        // Останавливаем службу
+        val serviceIntent = Intent(this, LoggingService::class.java)
+        stopService(serviceIntent)
     }
 
     private fun writeLog(message: String) {
