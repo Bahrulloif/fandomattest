@@ -387,20 +387,30 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun crashApp() {
-        // Логируем перед крашем
+        // Останавливаем логирование и логируем перед крашем
         CoroutineScope(Dispatchers.IO).launch {
             writeLog("User triggered: App crash")
             delay(100) // Даем время записать лог
+
+            // Останавливаем службу логирования
+            stopLogging()
+            delay(50)
+
             throw RuntimeException("App crashed!")
         }
     }
 
     @Suppress("ControlFlowWithEmptyBody")
     private fun freezeApp() {
-        // Логируем перед зависанием
+        // Останавливаем логирование и логируем перед зависанием
         CoroutineScope(Dispatchers.IO).launch {
             writeLog("User triggered: App freeze")
             delay(100) // Даем время записать лог
+
+            // Останавливаем службу логирования
+            stopLogging()
+            delay(50)
+
             // Блокируем главный поток на main thread
             runOnUiThread {
                 while (true) {
