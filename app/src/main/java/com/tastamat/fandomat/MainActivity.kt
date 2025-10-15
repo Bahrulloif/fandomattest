@@ -63,13 +63,6 @@ class MainActivity : ComponentActivity() {
             writeLog("App started")
         }
 
-        // Восстанавливаем состояние логирования при запуске
-        val isLoggingActive = prefs.getBoolean(KEY_LOGGING_ACTIVE, false)
-        if (isLoggingActive) {
-            val interval = prefs.getLong(KEY_LOGGING_INTERVAL, 10)
-            startLogging(interval)
-        }
-
         setContent {
             FandomattestTheme {
                 Surface(
@@ -88,6 +81,21 @@ class MainActivity : ComponentActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             writeLog("MainActivity displayed on screen")
         }
+
+        // Возобновляем логирование, если оно было активно
+        val isLoggingActive = prefs.getBoolean(KEY_LOGGING_ACTIVE, false)
+        if (isLoggingActive) {
+            val interval = prefs.getLong(KEY_LOGGING_INTERVAL, 10)
+            startLogging(interval)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Останавливаем службу логирования при сворачивании приложения
+        // Состояние в SharedPreferences сохраняется для автовозобновления в onResume
+        val serviceIntent = Intent(this, LoggingService::class.java)
+        stopService(serviceIntent)
     }
 
     private fun checkPermissions() {
