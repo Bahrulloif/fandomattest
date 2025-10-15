@@ -58,6 +58,11 @@ class MainActivity : ComponentActivity() {
 
         checkPermissions()
 
+        // Логируем запуск приложения
+        CoroutineScope(Dispatchers.IO).launch {
+            writeLog("App started")
+        }
+
         // Восстанавливаем состояние логирования при запуске
         val isLoggingActive = prefs.getBoolean(KEY_LOGGING_ACTIVE, false)
         if (isLoggingActive) {
@@ -74,6 +79,14 @@ class MainActivity : ComponentActivity() {
                     LoggingScreen()
                 }
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Логируем открытие главного экрана
+        CoroutineScope(Dispatchers.IO).launch {
+            writeLog("MainActivity displayed on screen")
         }
     }
 

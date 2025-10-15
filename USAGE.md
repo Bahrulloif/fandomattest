@@ -36,12 +36,22 @@
 ## Пример логов
 
 ```
+[2025-10-13 14:30:10] App started
+[2025-10-13 14:30:10] MainActivity displayed on screen
 [2025-10-13 14:30:15] Log entry #1: application running normally
 [2025-10-13 14:30:25] Log entry #2: application running normally
 [2025-10-13 14:30:35] Log entry #3: application running normally
 [2025-10-13 14:31:30] User triggered: App freeze
+[2025-10-13 14:32:40] App started
+[2025-10-13 14:32:40] MainActivity displayed on screen
 [2025-10-13 14:32:45] Log entry #1: application running normally
 ```
+
+### Типы логов:
+- **`App started`** - приложение запущено (onCreate)
+- **`MainActivity displayed on screen`** - главный экран отображён (onResume)
+- **`Log entry #N: application running normally`** - периодический лог
+- **`User triggered: [действие]`** - действие пользователя (нажатие кнопки)
 
 ## Тестирование
 

@@ -1,3 +1,5 @@
+[2025-10-13 14:30:10] App started
+[2025-10-13 14:30:10] MainActivity displayed on screen
 [2025-10-13 14:30:15] Log entry #1: application running normally
 [2025-10-13 14:30:25] Log entry #2: application running normally
 [2025-10-13 14:30:35] Log entry #3: application running normally
@@ -7,20 +9,28 @@
 [2025-10-13 14:31:15] Log entry #7: application running normally
 [2025-10-13 14:31:25] Log entry #8: application running normally
 [2025-10-13 14:31:30] User triggered: App freeze
+[2025-10-13 14:32:40] App started
+[2025-10-13 14:32:40] MainActivity displayed on screen
 [2025-10-13 14:32:45] Log entry #1: application running normally
 [2025-10-13 14:32:55] Log entry #2: application running normally
 [2025-10-13 14:33:05] Log entry #3: application running normally
 [2025-10-13 14:33:15] User triggered: App reset
+[2025-10-13 14:34:15] App started
+[2025-10-13 14:34:15] MainActivity displayed on screen
 [2025-10-13 14:34:20] Log entry #1: application running normally
 [2025-10-13 14:34:30] Log entry #2: application running normally
 [2025-10-13 14:34:40] Log entry #3: application running normally
 [2025-10-13 14:34:50] Log entry #4: application running normally
 [2025-10-13 14:35:00] Log entry #5: application running normally
 [2025-10-13 14:35:10] User triggered: Clear logs
+[2025-10-13 14:36:00] App started
+[2025-10-13 14:36:00] MainActivity displayed on screen
 [2025-10-13 14:36:05] Log entry #1: application running normally
 [2025-10-13 14:36:15] Log entry #2: application running normally
 [2025-10-13 14:36:25] Log entry #3: application running normally
 [2025-10-13 14:36:35] User triggered: App crash
+[2025-10-13 14:38:05] App started
+[2025-10-13 14:38:05] MainActivity displayed on screen
 [2025-10-13 14:38:10] Log entry #1: application running normally
 [2025-10-13 14:38:20] Log entry #2: application running normally
 [2025-10-13 14:38:30] Log entry #3: application running normally

@@ -24,11 +24,19 @@
 
 ### 3. Формат логов
 ```
+[2025-10-13 14:30:10] App started
+[2025-10-13 14:30:10] MainActivity displayed on screen
 [2025-10-13 14:30:15] Log entry #1: application running normally
 [2025-10-13 14:30:25] Log entry #2: application running normally
 [2025-10-13 14:31:30] User triggered: App freeze
 [2025-10-13 14:33:15] User triggered: App reset
 ```
+
+**Типы логов:**
+- `App started` - приложение запущено (вызывается в onCreate)
+- `MainActivity displayed on screen` - главный экран отображён (вызывается в onResume)
+- `Log entry #N: application running normally` - периодический лог
+- `User triggered: [действие]` - действие пользователя (кнопки управления)
 
 ## Технические детали
 
